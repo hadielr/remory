@@ -1,5 +1,6 @@
 context {
     input endpoint: string;
+    input family: string[];
 }
 
 // declare external functions here 
@@ -10,25 +11,80 @@ start node root {
     do {
         #connectSafe($endpoint);
         #waitForSpeech(1000);
-        #sayText("Thank you for visitng the ACME Rockets and supplies website.");
-        #sayText(" I'm your artificially intelligent agent Dasha. How can I help you today?");
+        #sayText("Hello, welcome to Remory, I will be your personal memory assistant");
+        #sayText("Are you ready to store some new memories?");
         wait *;
     }
-    transitions {
+    transitions { 
+        next: goto status on true;
     }
 }
-
-// acknowledge flow begins 
-digression status {
+digression status{
     conditions { on #messageHasIntent("status"); }
+    do{
+        goto status;
+    }
+    transitions{status:goto status;}
+}
+// acknowledge flow begins 
+node status {
+  //  conditions { on #messageHasIntent("status"); }
     do {
-        #sayText("Great! To tell you your ACME Rockets application status, I need to confirm your identity.");
-        #sayText("It seems that you are logged in as Mr. Wile E. Coyote. Can you please confirm the answer to the secret question. ");
-        #sayText("What is your favourite fruit?");
+        #sayText("Great! Now we can get started, what kind of memory would you like to remember? .");
+        #sayText("You can choose between things that are family, medical, location related, as well as general information");
+        #sayText("Which category would you like to choose?");
         wait *;
     } 
     transitions {
-        confirm: goto confirm on #messageHasData("fruit");
+        family: goto family on #messageHasIntent("family");
+        son: goto son on #messageHasData("son");
+        sonaddress: goto sonaddress on #messageHasData("sonaddress");
+    }
+}
+node family {
+    do {
+        var family = #messageGetData("family", {value: true})[0]?.value??"";
+        #sayText("Within family, what would you like to save?");
+        wait *;
+    }
+    transitions {
+        son: goto son on #messageHasIntent("son");
+        sonaddress: goto sonaddress on #messageHasIntent("sonaddress");
+    }
+}
+
+node son {
+    do {
+        var son = #messageGetData("son", {value: true})[0]?.value??"";
+        #sayText("Got it, what would you like to tell me about your son? Name or the address?");
+        wait *;
+    }
+    transitions {
+        sonname: goto sonname on #messageHasIntent("sonname");
+        sonaddress: goto sonaddress on #messageHasIntent("address");
+    }
+}
+node sonname {
+    do {
+        var son = #messageGetData("son", {value: true})[0]?.value??"";
+        #sayText("What is the name of your son?");
+        wait *;
+    }
+    transitions {
+        sonaddress: goto sonaddress on #messageHasIntent("sonname");
+        bye_then: goto bye_then on #messageHasIntent("no");
+    }
+}
+
+node sonaddress {
+    do {
+        var address = #messageGetData("address", {value: true})[0]?.value??"";
+        #sayText("What is the address of your son?");
+        wait *;
+    }
+    transitions {
+        can_help: goto can_help on #messageHasIntent("sonaddress");
+        bye_then: goto bye_then on #messageHasIntent("no");
     }
 }
 
@@ -37,7 +93,7 @@ node confirm {
         var fruit = #messageGetData("fruit", { value: true })[0]?.value??"";
         var response = external confirm(fruit);
         if (response) {
-            #sayText("Great, identity confirmed. Let me just check your status. ");
+            #sayText("Great, identity confirmed. Let me just check your status.");
             goto approved;
         }
         else {
@@ -68,7 +124,7 @@ node approved {
 
 node bye_then {
     do {
-        #sayText("Thank you and happy trails! ");
+        #sayText("Thank you and I hope to hear from you again soon!");
         exit;
     }
 }
@@ -76,8 +132,14 @@ node bye_then {
 
 node can_help {
     do {
-        #sayText("Right. How can I help you? ");
+        #sayText("Right. I got that down and it will be available for future reference.");
+        #sayText("You can tell me what you want to do next, or you can say no to exit");
         wait*;
+    }
+    transitions {
+        son: goto son on #messageHasData("son");
+        address: goto sonaddress on #messageHasData("sonaddress");
+        bye_then: goto bye_then on #messageHasIntent("no");
     }
 }
 

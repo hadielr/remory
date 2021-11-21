@@ -67,32 +67,74 @@
         "Can you repeat please? ",
         "Please repeat it"
       ]
+    },
+    "family": {
+      "includes": [
+        "fam",
+        "fam ily",
+        "family"
+        
+      ]
+    },
+    "son":{
+      "includes":[
+        "son",
+        "andrew",
+        "boy"
+      ]
+    },
+    "sonaddress":{
+      "includes":[
+        "place",
+        "address",
+        "houses",
+        "home",
+        "house",
+        "windsor",
+        "windsor road",
+        "windsor rd",
+        "add res"
+      ]
+    },
+    "sonname":{
+      "includes":[
+        "name",
+        "cory",
+        "his name",
+        "edward",
+        "Andrew",
+        "andrew",
+        "An drew",
+        "a drew",
+        "adrew"
+      ]
     }
+
 
 
   },
 
 
   "entities": {
-    "fruit": {
+    "relatives": {
       "open_set": true,
       "values": [
         {
-          "value": "strawberry",
+          "value": "apple",
           "synonyms": [
-            "strawberry", "strawberries", "straw berry"
+            "qe", "doughter", "dau ter"
           ]
         },
         {
-          "value": "road runner",
+          "value": "apple",
           "synonyms": [
-            "road runner", "rd runner", "roadrunner"
+            "sun", "edward", "boy"
           ]
         },
         {
           "value": "banana",
           "synonyms": [
-            "banana", "bananas", "bananos"
+             "bananas", "bananos"
 
           ]
         },
@@ -117,12 +159,12 @@
         }
       ],
       "includes": [
-        "I do love my (strawberry)[fruit]",
-        "My favorite fruit is (banana)[fruit]",
-        "Most days I prefer (plum)[fruit]",
-        "I would eat (peach)[fruit] every day for the rest of my life",
-        "Ah, what a question. (strawberry)[fruit] of course",
-        "I like (strawberry)[fruit] best of all"
+        "I do love my (apple)[relatives]",
+        "My favorite fruit is (apple)[relatives]",
+        "Most days I prefer (apple)[relatives]",
+        "I would eat (apple)[relatives] every day for the rest of my life",
+        "Ah, what a question. (apple)[relatives] of course",
+        "I like (apple)[relatives] best of all"
 
       ]
     }

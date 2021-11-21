@@ -8,8 +8,12 @@ expressApp.use(express.json());
 expressApp.use(cors());
 
 const axios = require("axios").default;
+const fs = require("fs");
 
-const main = async () => {
+const main = async () => { 
+const fin= await fs.promises.open("./input.json", "r");
+const rawText = (await fin.readFile()).toString();
+const parsedInput = JSON.parse(rawText);
   const app = await dasha.deploy(`${__dirname}/app`);
 
   app.setExternal("confirm", async(args, conv) => {
@@ -62,7 +66,7 @@ const main = async () => {
     res.sendStatus(200);
 
     console.log("Start call for", req.body);
-    const conv = app.createConversation({ endpoint: aor, name });
+    const conv = app.createConversation({ endpoint: aor, name, key:parsedInput["key"], family:parsedInput["family"] });
     conv.on("transcription", console.log);
     conv.audio.tts = "dasha";
     conv.audio.noiseVolume = 0;
